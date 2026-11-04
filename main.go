@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
 
-	// "strings"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -47,15 +45,9 @@ func main() {
 }
 
 func handleRelLinks(baseURL *url.URL, someURLStr string) string {
-	invalidSchemes := []string{"tel:", "mailto:", "sms:", "javascript:"} 
-	for _, invalidScheme := range invalidSchemes {
-		if strings.Contains(someURLStr, invalidScheme) {
-			return ""
-		}
-	}
 	parsedURL, err := baseURL.Parse(someURLStr)
-	if err != nil {
-		panic(err)
+	if err != nil || (parsedURL.Scheme != "http" && parsedURL.Scheme != "https") {
+		return ""
 	}
 	// Strip fragments...
 	parsedURL.Fragment = ""
